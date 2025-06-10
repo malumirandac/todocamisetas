@@ -21,8 +21,7 @@ $clienteController = new ClienteController($db);
 $path = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
 $segments = explode('/', $path);
 
-// Ajusta aquí si tu proyecto está en un subdirectorio (por ejemplo /todocamisetas)
-$recurso = $segments[1] ?? '';  // /todocamisetas/clientes → 'clientes'
+$recurso = $segments[1] ?? '';  
 $id = $segments[2] ?? null;
 $method = $_SERVER['REQUEST_METHOD'];
 
@@ -83,18 +82,23 @@ switch ($recurso) {
         }
         break;
 
+    ////Logica de descuentos y precios finales
+    case 'camisetas-cliente': 
+        if ($method === 'GET' && $id) {
+            $camisetaController->obtenerCamisetasParaCliente($id);
+        } else {
+            http_response_code(400);
+            echo json_encode(["mensaje" => "ID de cliente requerido"]);
+        }
+        break;
+        
     default:
         http_response_code(404);
         echo json_encode(["mensaje" => "Ruta no encontrada"]);
         break;
 }
 
-////Logica de descuentos y precios finales
-    case 'camisetas-cliente':
-        if ($method === 'GET' && $id) {
-            $camisetaController->obtenerCamisetasParaCliente($id);
-        }
-        break;
+
 
 
 ?>

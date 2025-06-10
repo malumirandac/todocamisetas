@@ -1,0 +1,273 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API RESTful - Todocamisetas",
+    "version": "1.0.0",
+    "description": "Documentación de la API local para gestión de camisetas y clientes"
+  },
+  "servers": [
+    {
+      "url": "http://localhost/todocamisetas",
+      "description": "Servidor local de desarrollo"
+    }
+  ],
+  "paths": {
+    "/camisetas": {
+      "get": {
+        "summary": "Obtener todas las camisetas",
+        "description": "Retorna todas las camisetas registradas en el sistema.",
+        "responses": {
+          "200": {
+            "description": "Listado de camisetas",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Camiseta" }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No se encontraron camisetas"
+          }
+        }
+      },
+      "post": {
+        "summary": "Crear una nueva camiseta",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Camiseta" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Camiseta creada exitosamente"
+          },
+          "400": {
+            "description": "Datos inválidos"
+          }
+        }
+      }
+    },
+    "/camisetas/{id}": {
+      "get": {
+        "summary": "Obtener camiseta por ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Camiseta encontrada",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Camiseta" }
+              }
+            }
+          },
+          "404": {
+            "description": "Camiseta no encontrada"
+          }
+        }
+      },
+      "put": {
+        "summary": "Actualizar camiseta por ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Camiseta" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Camiseta actualizada"
+          },
+          "400": {
+            "description": "Datos inválidos"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Eliminar camiseta por ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Camiseta eliminada"
+          },
+          "404": {
+            "description": "Camiseta no encontrada"
+          }
+        }
+      }
+    },
+    "/clientes": {
+      "get": {
+        "summary": "Obtener todos los clientes",
+        "responses": {
+          "200": {
+            "description": "Listado de clientes",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Cliente" }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No se encontraron clientes"
+          }
+        }
+      },
+      "post": {
+        "summary": "Crear un nuevo cliente",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Cliente" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Cliente creado"
+          },
+          "400": {
+            "description": "Datos inválidos"
+          }
+        }
+      }
+    },
+    "/clientes/{id}": {
+      "get": {
+        "summary": "Obtener cliente por ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cliente encontrado",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Cliente" }
+              }
+            }
+          },
+          "404": {
+            "description": "Cliente no encontrado"
+          }
+        }
+      },
+      "put": {
+        "summary": "Actualizar cliente por ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Cliente" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Cliente actualizado"
+          },
+          "400": {
+            "description": "Datos inválidos"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Eliminar cliente por ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cliente eliminado"
+          },
+          "404": {
+            "description": "Cliente no encontrado"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Camiseta": {
+        "type": "object",
+        "properties": {
+          "titulo": { "type": "string" },
+          "club": { "type": "string" },
+          "pais": { "type": "string" },
+          "tipo": { "type": "string" },
+          "color": { "type": "string" },
+          "precio_base": { "type": "number" },
+          "detalles": { "type": "string" },
+          "sku": { "type": "string" }
+        },
+        "required": ["titulo", "club", "pais", "tipo", "color", "precio_base", "sku"]
+      },
+      "Cliente": {
+        "type": "object",
+        "properties": {
+          "nombre": { "type": "string" },
+          "rut": { "type": "string" },
+          "ciudad": { "type": "string" },
+          "region": { "type": "string" },
+          "categoria": { "type": "string" },
+          "contacto_nombre": { "type": "string" },
+          "contacto_correo": { "type": "string" },
+          "porcentaje_oferta": { "type": "number" }
+        },
+        "required": ["nombre", "rut", "ciudad", "region", "categoria", "contacto_nombre", "contacto_correo"]
+      }
+    }
+  }
+}
