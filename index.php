@@ -113,7 +113,7 @@ switch ($recurso) {
         }
         break;
 
-    case 'camisetas-tallas':
+    case 'camisetatalla':
     if ($method === 'GET') {
         $camisetaTallaController->obtenerTodos();
     } elseif ($method === 'POST') {
