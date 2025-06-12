@@ -7,7 +7,7 @@ class Cliente {
         $this->conn = $db;
     }
 
-    // CREATE
+    
     public function insertarCliente($data) {
         try {
             error_log("Datos recibidos en insertarCliente: " . json_encode($data));
@@ -35,7 +35,7 @@ class Cliente {
         }
     }
 
-    // READ - ALL
+    
     public function obtenerClientes() {
         try {
             $query = "SELECT * FROM clientes";
@@ -47,7 +47,7 @@ class Cliente {
         }
     }
 
-    // READ - BY ID
+    
     public function obtenerClientePorId($id) {
         try {
             $query = "SELECT * FROM clientes WHERE id = :id";
@@ -61,7 +61,7 @@ class Cliente {
         }
     }
 
-    // UPDATE (total o parcial)
+    
     public function actualizarCliente($id, $data) {
         try {
             error_log("Datos recibidos para actualizarCliente: ID=$id, " . json_encode($data));
@@ -98,7 +98,7 @@ class Cliente {
         }
     }
 
-    // DELETE
+    
     public function eliminarCliente($id) {
         try {
             $query = "DELETE FROM clientes WHERE id = :id";

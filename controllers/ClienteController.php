@@ -8,7 +8,7 @@ class ClienteController {
         $this->cliente = new Cliente($db);
     }
 
-    // CREATE
+
     public function insertarCliente($data) {
         if (!empty($data['nombre_comercial']) && !empty($data['rut']) &&
             !empty($data['ciudad']) && !empty($data['region']) &&
@@ -30,7 +30,7 @@ class ClienteController {
         }
     }
 
-    // READ ALL
+    
     public function obtenerClientes() {
         try {
             $clientes = $this->cliente->obtenerClientes();
@@ -47,7 +47,7 @@ class ClienteController {
         }
     }
 
-    // READ ONE
+    
     public function obtenerClientePorId($id) {
         if (empty($id)) {
             http_response_code(400);
@@ -66,7 +66,7 @@ class ClienteController {
         }
     }
 
-    // UPDATE TOTAL
+    
     public function actualizarCliente($id, $data) {
         if (empty($id)) {
             http_response_code(400);
@@ -94,7 +94,7 @@ class ClienteController {
         }
     }
 
-    // UPDATE PARCIAL
+    
     public function actualizarParcialCliente($id, $data) {
         if (empty($id)) {
             http_response_code(400);
@@ -118,7 +118,7 @@ class ClienteController {
         }
     }
 
-    // DELETE
+    
     public function eliminarCliente($id) {
         if (empty($id)) {
             http_response_code(400);

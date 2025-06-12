@@ -9,6 +9,8 @@ header('Content-Type: application/json');
 require_once './config/database.php';
 require_once './controllers/CamisetaController.php';
 require_once './controllers/ClienteController.php';
+require_once './controllers/TallaController.php';
+
 
 // Inicializar base de datos y controladores
 $database = new Database();
@@ -16,6 +18,7 @@ $db = $database->getConnection();
 
 $camisetaController = new CamisetaController($db);
 $clienteController = new ClienteController($db);
+$tallaController = new TallaController($db);
 
 // Extraer ruta y método
 $path = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
@@ -89,6 +92,21 @@ switch ($recurso) {
         } else {
             http_response_code(400);
             echo json_encode(["mensaje" => "ID de cliente requerido"]);
+        }
+        break;
+
+    case 'tallas':
+        if ($method === 'GET') {
+            $tallaController->obtenerTallas();
+        } elseif ($method === 'POST') {
+            $tallaController->insertarTalla(getJsonInput());
+        } elseif ($method === 'PUT') {
+            $tallaController->actualizarTalla($id, getJsonInput());
+        } elseif ($method === 'DELETE') {
+            $tallaController->eliminarTalla($id);
+        } else {
+            http_response_code(405);
+            echo json_encode(["mensaje" => "Método no permitido"]);
         }
         break;
         

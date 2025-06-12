@@ -1,9 +1,9 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "API RESTful - Todocamisetas",
+    "title": "API TodoCamisetas",
     "version": "1.0.0",
-    "description": "Documentación de la API local para gestión de camisetas y clientes"
+    "description": "API RESTful para la gestión de camisetas y clientes, con lógica de precios personalizados."
   },
   "servers": [
     {
@@ -15,40 +15,84 @@
     "/camisetas": {
       "get": {
         "summary": "Obtener todas las camisetas",
-        "description": "Retorna todas las camisetas registradas en el sistema.",
+        "description": "Retorna todas las camisetas registradas.",
         "responses": {
           "200": {
-            "description": "Listado de camisetas",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": { "$ref": "#/components/schemas/Camiseta" }
-                }
-              }
-            }
+            "description": "Lista de camisetas"
           },
-          "404": {
-            "description": "No se encontraron camisetas"
+          "500": {
+            "description": "Error interno del servidor"
           }
         }
       },
       "post": {
         "summary": "Crear una nueva camiseta",
+        "description": "Inserta una nueva camiseta en el sistema.",
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/Camiseta" }
+              "schema": {
+                "type": "object"
+              },
+              "example": {
+                "titulo": "Camiseta 2025",
+                "club": "Colo Colo",
+                "pais": "Chile",
+                "tipo": "Visita",
+                "color": "Blanco",
+                "precio_base": 31990,
+                "detalles": "Nueva versión visitante",
+                "sku": "CC2025V"
+              }
             }
           }
         },
         "responses": {
           "201": {
-            "description": "Camiseta creada exitosamente"
+            "description": "Camiseta creada correctamente"
           },
           "400": {
             "description": "Datos inválidos"
+          },
+          "500": {
+            "description": "Error interno del servidor"
+          }
+        }
+      },
+      "put": {
+        "summary": "Actualizar camisetas",
+        "description": "Actualiza todas las camisetas (no recomendado en producción)",
+        "responses": {
+          "200": {
+            "description": "Operación exitosa"
+          },
+          "400": {
+            "description": "Solicitud incorrecta"
+          },
+          "404": {
+            "description": "Recurso no encontrado"
+          },
+          "500": {
+            "description": "Error interno del servidor"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Eliminar camisetas",
+        "description": "Elimina múltiples camisetas (no implementado usualmente)",
+        "responses": {
+          "200": {
+            "description": "Operación exitosa"
+          },
+          "400": {
+            "description": "Solicitud incorrecta"
+          },
+          "404": {
+            "description": "Recurso no encontrado"
+          },
+          "500": {
+            "description": "Error interno del servidor"
           }
         }
       }
@@ -61,17 +105,14 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "schema": { "type": "integer" }
+            "schema": {
+              "type": "integer"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Camiseta encontrada",
-            "content": {
-              "application/json": {
-                "schema": { "$ref": "#/components/schemas/Camiseta" }
-              }
-            }
+            "description": "Camiseta encontrada"
           },
           "404": {
             "description": "Camiseta no encontrada"
@@ -85,14 +126,18 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "schema": { "type": "integer" }
+            "schema": {
+              "type": "integer"
+            }
           }
         ],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/Camiseta" }
+              "schema": {
+                "type": "object"
+              }
             }
           }
         },
@@ -102,6 +147,9 @@
           },
           "400": {
             "description": "Datos inválidos"
+          },
+          "500": {
+            "description": "Error interno del servidor"
           }
         }
       },
@@ -112,15 +160,109 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "schema": { "type": "integer" }
+            "schema": {
+              "type": "integer"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Camiseta eliminada"
+            "description": "Camiseta eliminada correctamente"
           },
           "404": {
             "description": "Camiseta no encontrada"
+          }
+        }
+      },
+      "post": {
+        "summary": "No aplicable: crear con ID",
+        "description": "No se debe usar POST con ID (solo para propósito de evaluación)",
+        "responses": {
+          "200": {
+            "description": "Operación exitosa"
+          },
+          "400": {
+            "description": "Solicitud incorrecta"
+          },
+          "404": {
+            "description": "Recurso no encontrado"
+          },
+          "500": {
+            "description": "Error interno del servidor"
+          }
+        }
+      }
+    },
+    "/camisetas/precio": {
+      "get": {
+        "summary": "Obtener camisetas con precio cliente",
+        "description": "Calcula precios con lógica de cliente y oferta",
+        "responses": {
+          "200": {
+            "description": "Operación exitosa"
+          },
+          "400": {
+            "description": "Solicitud incorrecta"
+          },
+          "404": {
+            "description": "Recurso no encontrado"
+          },
+          "500": {
+            "description": "Error interno del servidor"
+          }
+        }
+      },
+      "post": {
+        "summary": "Insertar precio de oferta",
+        "description": "Asocia un precio de oferta entre cliente y camiseta",
+        "responses": {
+          "200": {
+            "description": "Operación exitosa"
+          },
+          "400": {
+            "description": "Solicitud incorrecta"
+          },
+          "404": {
+            "description": "Recurso no encontrado"
+          },
+          "500": {
+            "description": "Error interno del servidor"
+          }
+        }
+      },
+      "put": {
+        "summary": "Actualizar precio de oferta",
+        "description": "Modifica una oferta existente",
+        "responses": {
+          "200": {
+            "description": "Operación exitosa"
+          },
+          "400": {
+            "description": "Solicitud incorrecta"
+          },
+          "404": {
+            "description": "Recurso no encontrado"
+          },
+          "500": {
+            "description": "Error interno del servidor"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Eliminar precio de oferta",
+        "description": "Elimina una oferta específica",
+        "responses": {
+          "200": {
+            "description": "Operación exitosa"
+          },
+          "400": {
+            "description": "Solicitud incorrecta"
+          },
+          "404": {
+            "description": "Recurso no encontrado"
+          },
+          "500": {
+            "description": "Error interno del servidor"
           }
         }
       }
@@ -130,18 +272,10 @@
         "summary": "Obtener todos los clientes",
         "responses": {
           "200": {
-            "description": "Listado de clientes",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": { "$ref": "#/components/schemas/Cliente" }
-                }
-              }
-            }
+            "description": "Lista de clientes"
           },
-          "404": {
-            "description": "No se encontraron clientes"
+          "500": {
+            "description": "Error interno del servidor"
           }
         }
       },
@@ -151,7 +285,19 @@
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/Cliente" }
+              "schema": {
+                "type": "object"
+              },
+              "example": {
+                "nombre_comercial": "90minutos",
+                "rut": "76.123.456-7",
+                "ciudad": "Providencia",
+                "region": "Santiago",
+                "categoria": "preferencial",
+                "contacto_nombre": "Carlos Pérez",
+                "contacto_correo": "compras@90minutos.cl",
+                "porcentaje_descuento": 10.0
+              }
             }
           }
         },
@@ -161,6 +307,42 @@
           },
           "400": {
             "description": "Datos inválidos"
+          }
+        }
+      },
+      "put": {
+        "summary": "Actualizar múltiples clientes",
+        "description": "No recomendado: actualización masiva de clientes",
+        "responses": {
+          "200": {
+            "description": "Operación exitosa"
+          },
+          "400": {
+            "description": "Solicitud incorrecta"
+          },
+          "404": {
+            "description": "Recurso no encontrado"
+          },
+          "500": {
+            "description": "Error interno del servidor"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Eliminar múltiples clientes",
+        "description": "No recomendado: eliminación masiva de clientes",
+        "responses": {
+          "200": {
+            "description": "Operación exitosa"
+          },
+          "400": {
+            "description": "Solicitud incorrecta"
+          },
+          "404": {
+            "description": "Recurso no encontrado"
+          },
+          "500": {
+            "description": "Error interno del servidor"
           }
         }
       }
@@ -173,17 +355,14 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "schema": { "type": "integer" }
+            "schema": {
+              "type": "integer"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Cliente encontrado",
-            "content": {
-              "application/json": {
-                "schema": { "$ref": "#/components/schemas/Cliente" }
-              }
-            }
+            "description": "Cliente encontrado"
           },
           "404": {
             "description": "Cliente no encontrado"
@@ -197,14 +376,18 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "schema": { "type": "integer" }
+            "schema": {
+              "type": "integer"
+            }
           }
         ],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/Cliente" }
+              "schema": {
+                "type": "object"
+              }
             }
           }
         },
@@ -224,7 +407,9 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "schema": { "type": "integer" }
+            "schema": {
+              "type": "integer"
+            }
           }
         ],
         "responses": {
@@ -235,39 +420,308 @@
             "description": "Cliente no encontrado"
           }
         }
+      },
+      "post": {
+        "summary": "No aplicable: crear con ID",
+        "description": "No se debe usar POST con ID (sólo para evaluación)",
+        "responses": {
+          "200": {
+            "description": "Operación exitosa"
+          },
+          "400": {
+            "description": "Solicitud incorrecta"
+          },
+          "404": {
+            "description": "Recurso no encontrado"
+          },
+          "500": {
+            "description": "Error interno del servidor"
+          }
+        }
+      }
+    },
+    "/tallas": {
+      "get": {
+        "summary": "Obtener todas las tallas",
+        "description": "Retorna todas las tallas disponibles.",
+        "responses": {
+          "200": {
+            "description": "Lista de tallas"
+          },
+          "500": {
+            "description": "Error interno del servidor"
+          }
+        }
+      },
+      "post": {
+        "summary": "Crear nueva talla",
+        "description": "Agrega una nueva talla.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Talla"
+              },
+              "example": {
+                "talla": "M"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Talla creada correctamente"
+          },
+          "400": {
+            "description": "Datos inválidos"
+          },
+          "500": {
+            "description": "Error interno del servidor"
+          }
+        }
+      },
+      "put": {
+        "summary": "Actualizar múltiples tallas",
+        "description": "No recomendado: actualización masiva de tallas",
+        "responses": {
+          "200": {
+            "description": "Operación exitosa"
+          },
+          "400": {
+            "description": "Solicitud incorrecta"
+          },
+          "500": {
+            "description": "Error interno del servidor"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Eliminar múltiples tallas",
+        "description": "No recomendado: eliminación masiva de tallas",
+        "responses": {
+          "200": {
+            "description": "Operación exitosa"
+          },
+          "400": {
+            "description": "Solicitud incorrecta"
+          },
+          "500": {
+            "description": "Error interno del servidor"
+          }
+        }
+      }
+    },
+    "/tallas/{id}": {
+      "get": {
+        "summary": "Obtener talla por ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Talla encontrada"
+          },
+          "404": {
+            "description": "Talla no encontrada"
+          }
+        }
+      },
+      "put": {
+        "summary": "Actualizar talla por ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Talla"
+              },
+              "example": {
+                "talla": "XL"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Talla actualizada"
+          },
+          "400": {
+            "description": "Datos inválidos"
+          },
+          "500": {
+            "description": "Error interno del servidor"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Eliminar talla por ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Talla eliminada correctamente"
+          },
+          "404": {
+            "description": "Talla no encontrada"
+          }
+        }
+      },
+      "post": {
+        "summary": "No aplicable: crear con ID (solo para evaluación)",
+        "responses": {
+          "200": {
+            "description": "Operación exitosa"
+          },
+          "400": {
+            "description": "Solicitud incorrecta"
+          },
+          "404": {
+            "description": "Recurso no encontrado"
+          },
+          "500": {
+            "description": "Error interno del servidor"
+          }
+        }
       }
     }
+
   },
   "components": {
     "schemas": {
       "Camiseta": {
         "type": "object",
         "properties": {
-          "titulo": { "type": "string" },
-          "club": { "type": "string" },
-          "pais": { "type": "string" },
-          "tipo": { "type": "string" },
-          "color": { "type": "string" },
-          "precio_base": { "type": "number" },
-          "detalles": { "type": "string" },
-          "sku": { "type": "string" }
+          "id": {
+            "type": "integer"
+          },
+          "titulo": {
+            "type": "string"
+          },
+          "club": {
+            "type": "string"
+          },
+          "pais": {
+            "type": "string"
+          },
+          "tipo": {
+            "type": "string"
+          },
+          "color": {
+            "type": "string"
+          },
+          "precio_base": {
+            "type": "number"
+          },
+          "detalles": {
+            "type": "string"
+          },
+          "sku": {
+            "type": "string"
+          }
         },
-        "required": ["titulo", "club", "pais", "tipo", "color", "precio_base", "sku"]
+        "required": [
+          "titulo",
+          "club",
+          "pais",
+          "tipo",
+          "color",
+          "precio_base",
+          "sku"
+        ]
       },
       "Cliente": {
         "type": "object",
         "properties": {
-          "nombre": { "type": "string" },
-          "rut": { "type": "string" },
-          "ciudad": { "type": "string" },
-          "region": { "type": "string" },
-          "categoria": { "type": "string" },
-          "contacto_nombre": { "type": "string" },
-          "contacto_correo": { "type": "string" },
-          "porcentaje_oferta": { "type": "number" }
+          "id": {
+            "type": "integer"
+          },
+          "nombre_comercial": {
+            "type": "string"
+          },
+          "rut": {
+            "type": "string"
+          },
+          "ciudad": {
+            "type": "string"
+          },
+          "region": {
+            "type": "string"
+          },
+          "categoria": {
+            "type": "string"
+          },
+          "contacto_nombre": {
+            "type": "string"
+          },
+          "contacto_correo": {
+            "type": "string"
+          },
+          "porcentaje_descuento": {
+            "type": "number"
+          }
         },
-        "required": ["nombre", "rut", "ciudad", "region", "categoria", "contacto_nombre", "contacto_correo"]
+        "required": [
+          "nombre_comercial",
+          "rut",
+          "ciudad",
+          "region",
+          "categoria",
+          "contacto_nombre",
+          "contacto_correo"
+        ]
+      },
+      "Talla": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "talla": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "talla"
+      ],
+      "Error": {
+        "type": "object",
+        "properties": {
+          "mensaje": {
+            "type": "string",
+            "description": "Mensaje de error."
+          }
+        },
+        "required": [
+          "mensaje"
+        ]
       }
     }
+  }
   }
 }
