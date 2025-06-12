@@ -10,6 +10,7 @@ require_once './config/database.php';
 require_once './controllers/CamisetaController.php';
 require_once './controllers/ClienteController.php';
 require_once './controllers/TallaController.php';
+require_once './controllers/CamisetaTallaController.php';
 
 
 // Inicializar base de datos y controladores
@@ -19,6 +20,7 @@ $db = $database->getConnection();
 $camisetaController = new CamisetaController($db);
 $clienteController = new ClienteController($db);
 $tallaController = new TallaController($db);
+$camisetaTallaController = new CamisetaTallaController($db);
 
 // Extraer ruta y método
 $path = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
@@ -94,7 +96,8 @@ switch ($recurso) {
             echo json_encode(["mensaje" => "ID de cliente requerido"]);
         }
         break;
-
+    
+    ///Logica de tallas
     case 'tallas':
         if ($method === 'GET') {
             $tallaController->obtenerTallas();
@@ -109,6 +112,21 @@ switch ($recurso) {
             echo json_encode(["mensaje" => "Método no permitido"]);
         }
         break;
+
+    case 'camisetas-tallas':
+    if ($method === 'GET') {
+        $camisetaTallaController->obtenerTodos();
+    } elseif ($method === 'POST') {
+        $camisetaTallaController->insertar(getJsonInput());
+    } elseif ($method === 'PUT' && $id) {
+        $camisetaTallaController->actualizar($id, getJsonInput());
+    } elseif ($method === 'DELETE' && $id) {
+        $camisetaTallaController->eliminar($id);
+    } else {
+        http_response_code(405);
+        echo json_encode(["mensaje" => "Método no permitido"]);
+    }
+    break;
         
     default:
         http_response_code(404);

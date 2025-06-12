@@ -609,7 +609,115 @@
           }
         }
       }
+    },
+    "/camisetas-tallas": {
+  "get": {
+    "summary": "Obtener todas las relaciones de camiseta y talla",
+    "description": "Lista todos los registros de asignación de tallas a camisetas con su cantidad.",
+    "responses": {
+      "200": { "description": "Operación exitosa" },
+      "500": { "description": "Error interno del servidor" }
     }
+  },
+  "post": {
+    "summary": "Crear asignación de talla a camiseta",
+    "description": "Asigna una cantidad de stock de una talla para una camiseta.",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "$ref": "#/components/schemas/CamisetaTalla"
+          },
+          "example": {
+            "camiseta_id": 1,
+            "talla_id": 2,
+            "cantidad": 50
+          }
+        }
+      }
+    },
+    "responses": {
+      "201": { "description": "Asignación creada correctamente" },
+      "400": { "description": "Datos inválidos" },
+      "500": { "description": "Error interno del servidor" }
+    }
+  },
+  "put": {
+    "summary": "Actualizar múltiples asignaciones (no recomendado)",
+    "description": "Actualiza masivamente (no implementado)",
+    "responses": {
+      "200": { "description": "Operación exitosa" },
+      "400": { "description": "Solicitud incorrecta" }
+    }
+  },
+  "delete": {
+    "summary": "Eliminar múltiples asignaciones (no recomendado)",
+    "description": "Elimina masivamente (no implementado)",
+    "responses": {
+      "200": { "description": "Operación exitosa" },
+      "400": { "description": "Solicitud incorrecta" }
+    }
+  }
+},
+"/camisetas-tallas/{id}": {
+  "get": {
+    "summary": "Obtener una asignación específica por ID",
+    "parameters": [
+      {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "integer" }
+      }
+    ],
+    "responses": {
+      "200": { "description": "Asignación encontrada" },
+      "404": { "description": "Asignación no encontrada" }
+    }
+  },
+  "put": {
+    "summary": "Actualizar cantidad de asignación específica",
+    "parameters": [
+      {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "integer" }
+      }
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "$ref": "#/components/schemas/CamisetaTalla"
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": { "description": "Asignación actualizada" },
+      "400": { "description": "Datos inválidos" }
+    }
+  },
+  "delete": {
+    "summary": "Eliminar asignación por ID",
+    "parameters": [
+      {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "integer" }
+      }
+    ],
+    "responses": {
+      "200": { "description": "Asignación eliminada correctamente" },
+      "404": { "description": "Asignación no encontrada" }
+    }
+  }
+}
+
 
   },
   "components": {
@@ -721,7 +829,18 @@
           "mensaje"
         ]
       }
-    }
+      },
+      "CamisetaTalla": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" },
+        "camiseta_id": { "type": "integer" },
+        "talla_id": { "type": "integer" },
+        "cantidad": { "type": "integer" }
+      },
+      "required": ["camiseta_id", "talla_id", "cantidad"]
+  }
+
   }
   }
 }
